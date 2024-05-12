@@ -8,6 +8,7 @@ import net.minecraft.advancement.criterion.AbstractCriterionConditions;
 import net.minecraft.predicate.entity.AdvancementEntityPredicateDeserializer;
 import net.minecraft.predicate.entity.AdvancementEntityPredicateSerializer;
 import net.minecraft.predicate.entity.EntityPredicate;
+import net.minecraft.predicate.entity.LootContextPredicate;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
@@ -16,7 +17,7 @@ public class QuantumTeleportationCriterion extends AbstractCriterion<QuantumTele
     public static Identifier ID = QCraft.id("quantum_teleportation");
 
     @Override
-    protected Conditions conditionsFromJson(JsonObject obj, EntityPredicate.Extended playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
+    protected Conditions conditionsFromJson(JsonObject obj, LootContextPredicate playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
         JsonPrimitive width = obj.getAsJsonPrimitive("width");
         JsonPrimitive length = obj.getAsJsonPrimitive("length");
         JsonPrimitive height = obj.getAsJsonPrimitive("height");
@@ -46,7 +47,7 @@ public class QuantumTeleportationCriterion extends AbstractCriterion<QuantumTele
         int length;
         int height;
 
-        public Conditions(EntityPredicate.Extended playerPredicate, int width, int length, int height) {
+        public Conditions(LootContextPredicate playerPredicate, int width, int length, int height) {
             super(ID, playerPredicate);
             this.width = width;
             this.length = length;

@@ -4,15 +4,18 @@ import com.acikek.qcraft.QCraft;
 import com.acikek.qcraft.block.qblock.QBlock;
 import com.acikek.qcraft.block.qblock.QBlockItem;
 import com.acikek.qcraft.item.QBlockEssence;
-import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.inventory.RecipeInputInventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialCraftingRecipe;
 import net.minecraft.recipe.SpecialRecipeSerializer;
+import net.minecraft.recipe.book.CraftingRecipeCategory;
+import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -22,17 +25,17 @@ public class QBlockRecipe extends SpecialCraftingRecipe {
 
     public static SpecialRecipeSerializer<QBlockRecipe> SERIALIZER;
 
-    public QBlockRecipe(Identifier id) {
-        super(id);
+    public QBlockRecipe(Identifier id, CraftingRecipeCategory category) {
+        super(id, category);
     }
 
     @Override
-    public ItemStack craft(CraftingInventory inventory) {
+    public ItemStack craft(RecipeInputInventory inventory, DynamicRegistryManager manager) {
         QBlockEssence essence = (QBlockEssence) inventory.getStack(QBlock.Face.CENTER).getItem();
         List<String> faces = new ArrayList<>();
         for (QBlock.Face face : QBlock.Face.values()) {
             Item item = inventory.getStack(face.slot).getItem();
-            faces.add(Registry.ITEM.getId(item).toString());
+            faces.add(Registries.ITEM.getId(item).toString());
         }
         ItemStack stack = new ItemStack(essence.getQBlock());
         QBlockItem.applyFaces(stack, faces);
@@ -45,7 +48,7 @@ public class QBlockRecipe extends SpecialCraftingRecipe {
     }
 
     @Override
-    public boolean matches(CraftingInventory inventory, World world) {
+    public boolean matches(RecipeInputInventory inventory, World world) {
         if (!(inventory.getStack(QBlock.Face.CENTER).getItem() instanceof QBlockEssence)) {
             return false;
         }
@@ -78,6 +81,6 @@ public class QBlockRecipe extends SpecialCraftingRecipe {
     }
 
     public static void register() {
-        SERIALIZER = Registry.register(Registry.RECIPE_SERIALIZER, QCraft.id("crafting_special_qblock"), new SpecialRecipeSerializer<>(QBlockRecipe::new));
+        SERIALIZER = Registry.register(Registries.RECIPE_SERIALIZER, QCraft.id("crafting_special_qblock"), new SpecialRecipeSerializer<>(QBlockRecipe::new));
     }
 }

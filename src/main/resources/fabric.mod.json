@@ -25,6 +25,9 @@
     ],
     "main": [
       "com.acikek.qcraft.QCraft"
+    ],
+    "fabric-datagen": [
+      "com.acikek.qcraft.data.QCraftDataGenerator"
     ]
   },
   "mixins": [

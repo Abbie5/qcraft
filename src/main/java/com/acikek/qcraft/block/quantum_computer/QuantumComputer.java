@@ -16,13 +16,12 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.loot.context.LootContext;
+import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.BlockSoundGroup;
@@ -58,7 +57,7 @@ public class QuantumComputer extends Block implements BlockItemProvider, BlockEn
             SoundEvents.BLOCK_METAL_FALL
     );
 
-    public static final Settings DEFAULT_SETTINGS = FabricBlockSettings.of(Material.METAL)
+    public static final Settings DEFAULT_SETTINGS = FabricBlockSettings.of()
             .strength(5.0f, 10.0f)
             .sounds(SOUND_GROUP);
 
@@ -89,7 +88,7 @@ public class QuantumComputer extends Block implements BlockItemProvider, BlockEn
                     case "pylon_heights" -> DataResult.success(PYLON_HEIGHTS);
                     case "missing_counterpart" -> DataResult.success(MISSING_COUNTERPART);
                     case "errored_counterpart" -> DataResult.success(ERRORED_COUNTERPART);
-                    default -> DataResult.error("Not a valid Quantum Computer Error: " + id);
+                    default -> DataResult.error(() -> "Not a valid Quantum Computer Error: " + id);
                 };
             }
 
@@ -361,7 +360,7 @@ public class QuantumComputer extends Block implements BlockItemProvider, BlockEn
     }
 
     @Override
-    public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
+    public List<ItemStack> getDroppedStacks(BlockState state, LootContextParameterSet.Builder builder) {
         List<ItemStack> result = new ArrayList<>();
         if (!builder.getWorld().isClient()) {
             QuantumComputerLocation location = QuantumComputerData.get(builder.getWorld()).locations.removed;
@@ -386,10 +385,13 @@ public class QuantumComputer extends Block implements BlockItemProvider, BlockEn
         remove(world, pos);
     }
 
-    @Override
-    public PistonBehavior getPistonBehavior(BlockState state) {
-        return PistonBehavior.BLOCK;
-    }
+    // TODO
+//    @Override
+//    public PistonBehavior getPistonBehavior(BlockState state) {
+//        return PistonBehavior.BLOCK;
+//    }
+
+
 
     @Override
     public BiFunction<Block, Item.Settings, BlockItem> getBlockItem() {

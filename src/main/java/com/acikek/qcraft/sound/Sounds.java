@@ -1,8 +1,9 @@
 package com.acikek.qcraft.sound;
 
 import com.acikek.qcraft.QCraft;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.registry.Registry;
 
 public class Sounds {
 
@@ -15,12 +16,12 @@ public class Sounds {
     };
 
     public static SoundEvent create(String id) {
-        return new SoundEvent(QCraft.id(id));
+        return SoundEvent.of(QCraft.id(id));
     }
 
     public static void registerAll() {
         for (SoundEvent sound : SOUNDS) {
-            Registry.register(Registry.SOUND_EVENT, sound.getId(), sound);
+            Registry.register(Registries.SOUND_EVENT, sound.getId(), sound);
         }
     }
 }

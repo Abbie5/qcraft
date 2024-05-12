@@ -43,7 +43,7 @@ public class QuantumComputerGuiDescription extends SyncedGuiDescription {
         root.setSize(175, 150);
         root.setInsets(Insets.ROOT_PANEL);
         WItemSlot itemSlot = WItemSlot.of(blockInventory, 0)
-                .setFilter(stack -> stack.isOf(Items.COOLANT_CELL))
+                .setInputFilter(stack -> stack.isOf(Items.COOLANT_CELL))
                 .setIcon(new TextureIcon(QCraft.id("textures/gui/coolant_cell_slot.png")));
         WButton energize = new WButton().setLabel(Text.translatable("gui.qcraft.energize")).setEnabled(false);
         result.error.ifPresent(error -> addStatus(root, STATUS_FAILURE, error.getText()));
@@ -52,7 +52,7 @@ public class QuantumComputerGuiDescription extends SyncedGuiDescription {
             energize.setEnabled(true).setOnClick(() -> {
                 ItemStack stack = blockInventory.getStack(0);
                 if (stack.isOf(Items.COOLANT_CELL) && stack.getDamage() < stack.getMaxDamage()) {
-                    ScreenNetworking.of(this, NetworkSide.CLIENT).send(ENERGIZE, buf -> buf.encode(QuantumComputer.Result.Teleportation.CODEC, teleportation));
+                    ScreenNetworking.of(this, NetworkSide.CLIENT).send(ENERGIZE, buf -> buf.encodeAsJson(QuantumComputer.Result.Teleportation.CODEC, teleportation));
                     teleportation.toBoth(pos -> QuantumComputer.playEffects(world, pos));
                 }
                 else {
@@ -61,7 +61,7 @@ public class QuantumComputerGuiDescription extends SyncedGuiDescription {
             });
         });
         ScreenNetworking.of(this, NetworkSide.SERVER).receive(ENERGIZE, buf -> {
-            QuantumComputer.teleport(world, inventory.player, buf.decode(QuantumComputer.Result.Teleportation.CODEC));
+            QuantumComputer.teleport(world, inventory.player, buf.decodeAsJson(QuantumComputer.Result.Teleportation.CODEC));
             ItemStack stack = blockInventory.getStack(0);
             stack.setDamage(stack.getDamage() + 1);
         });
@@ -74,7 +74,7 @@ public class QuantumComputerGuiDescription extends SyncedGuiDescription {
     // TODO undeprecate this stuff
     public static void register() {
         SCREEN_HANDLER_TYPE = ScreenHandlerRegistry.registerExtended(QCraft.id("qc_gui"), (syncId, inventory, buf) ->
-                new QuantumComputerGuiDescription(syncId, inventory, ScreenHandlerContext.EMPTY, buf.decode(QuantumComputer.Result.CODEC)));
+                new QuantumComputerGuiDescription(syncId, inventory, ScreenHandlerContext.EMPTY, buf.decodeAsJson(QuantumComputer.Result.CODEC)));
     }
 
     public static void registerClient() {

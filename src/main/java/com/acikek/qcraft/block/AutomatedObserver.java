@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.AbstractRedstoneGateBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.BlockSoundGroup;
@@ -19,7 +18,7 @@ import net.minecraft.world.World;
 
 public class AutomatedObserver extends AbstractRedstoneGateBlock {
 
-    public static final Settings DEFAULT_SETTINGS = FabricBlockSettings.of(Material.DECORATION)
+    public static final Settings DEFAULT_SETTINGS = FabricBlockSettings.of()
             .breakInstantly()
             .sounds(BlockSoundGroup.WOOD);
 

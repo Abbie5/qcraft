@@ -11,12 +11,12 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.Registries;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -110,7 +110,7 @@ public class QBlockItem extends FrequentialItem {
         }
         for (int i = 0; i < faces.length; i++) {
             MutableText face = QBlock.Face.values()[i].text;
-            MutableText block = Registry.BLOCK.get(Identifier.tryParse(faces[i])).getName();
+            MutableText block = Registries.BLOCK.get(Identifier.tryParse(faces[i])).getName();
             tooltip.add(formatFace(face, block));
         }
         super.appendTooltip(stack, world, tooltip, context);

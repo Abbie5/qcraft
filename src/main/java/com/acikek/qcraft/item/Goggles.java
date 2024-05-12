@@ -23,19 +23,19 @@ public class Goggles extends ArmorItem {
 
     public static class Material implements ArmorMaterial {
 
-        public final Type type;
+        public final com.acikek.qcraft.item.Goggles.Type type;
 
-        public Material(Type type) {
+        public Material(com.acikek.qcraft.item.Goggles.Type type) {
             this.type = type;
         }
 
         @Override
-        public int getDurability(EquipmentSlot slot) {
+        public int getDurability(ArmorItem.Type type) {
             return -1;
         }
 
         @Override
-        public int getProtectionAmount(EquipmentSlot slot) {
+        public int getProtection(ArmorItem.Type type) {
             return 1;
         }
 
@@ -70,10 +70,10 @@ public class Goggles extends ArmorItem {
         }
     }
 
-    public final Type type;
+    public final com.acikek.qcraft.item.Goggles.Type type;
 
-    public Goggles(Type type) {
-        super(new Material(type), EquipmentSlot.HEAD, Items.defaultSettings());
+    public Goggles(com.acikek.qcraft.item.Goggles.Type type) {
+        super(new Material(type), ArmorItem.Type.HELMET, Items.defaultSettings());
         this.type = type;
     }
 
@@ -82,7 +82,7 @@ public class Goggles extends ArmorItem {
         return false;
     }
 
-    public static boolean isWearingGoggles(PlayerEntity player, Type type) {
+    public static boolean isWearingGoggles(PlayerEntity player, com.acikek.qcraft.item.Goggles.Type type) {
         return player.hasStackEquipped(EquipmentSlot.HEAD)
                 && player.getEquippedStack(EquipmentSlot.HEAD).getItem() instanceof Goggles goggles
                 && goggles.type == type;

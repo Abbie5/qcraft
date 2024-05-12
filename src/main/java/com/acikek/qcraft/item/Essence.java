@@ -1,6 +1,7 @@
 package com.acikek.qcraft.item;
 
 import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.inventory.RecipeInputInventory;
 import net.minecraft.item.Item;
 
 public class Essence extends Item {
@@ -18,7 +19,7 @@ public class Essence extends Item {
         this.essenceType = essenceType;
     }
 
-    public static int findSlot(CraftingInventory inventory) {
+    public static int findSlot(RecipeInputInventory inventory) {
         if (inventory.isEmpty()) {
             return -1;
         }

@@ -12,11 +12,11 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.dynamic.DynamicSerializableUuid;
+import net.minecraft.util.Uuids;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -28,7 +28,7 @@ public class QBlockLocation extends Frequential {
     public static final Codec<QBlockLocation> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
                     BlockPos.CODEC.fieldOf("pos").forGetter(l -> l.pos),
-                    DynamicSerializableUuid.CODEC.optionalFieldOf("frequency").forGetter(l -> l.frequency),
+                    Uuids.INT_STREAM_CODEC.optionalFieldOf("frequency").forGetter(l -> l.frequency),
                     QBlock.Type.CODEC.fieldOf("type").forGetter(l -> l.type),
                     Codec.list(Codec.STRING).fieldOf("faces").forGetter(l -> l.faces),
                     Codec.BOOL.fieldOf("observed").forGetter(l -> l.observed)
@@ -60,7 +60,7 @@ public class QBlockLocation extends Frequential {
     }
 
     public Block getFaceBlock(int index) {
-        return Registry.BLOCK.get(Identifier.tryParse(faces.get(index)));
+        return Registries.BLOCK.get(Identifier.tryParse(faces.get(index)));
     }
 
     /**
@@ -133,7 +133,7 @@ public class QBlockLocation extends Frequential {
         if (block instanceof InertQBlock) {
             return false;
         }
-        String id = Registry.BLOCK.getId(block).toString();
+        String id = Registries.BLOCK.getId(block).toString();
         return !faces.contains(id);
     }
 

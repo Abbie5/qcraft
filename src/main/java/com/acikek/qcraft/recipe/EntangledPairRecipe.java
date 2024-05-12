@@ -4,13 +4,16 @@ import com.acikek.qcraft.QCraft;
 import com.acikek.qcraft.block.FrequentialItem;
 import com.acikek.qcraft.block.qblock.QBlockItem;
 import com.acikek.qcraft.item.Essence;
-import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.inventory.RecipeInputInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialCraftingRecipe;
 import net.minecraft.recipe.SpecialRecipeSerializer;
+import net.minecraft.recipe.book.CraftingRecipeCategory;
+import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 import java.util.UUID;
@@ -19,8 +22,8 @@ public class EntangledPairRecipe extends SpecialCraftingRecipe {
 
     public static SpecialRecipeSerializer<EntangledPairRecipe> SERIALIZER;
 
-    public EntangledPairRecipe(Identifier id) {
-        super(id);
+    public EntangledPairRecipe(Identifier id, CraftingRecipeCategory category) {
+        super(id, category);
     }
 
     public static void applyFrequency(ItemStack stack, UUID uuid) {
@@ -28,7 +31,7 @@ public class EntangledPairRecipe extends SpecialCraftingRecipe {
     }
 
     @Override
-    public ItemStack craft(CraftingInventory inventory) {
+    public ItemStack craft(RecipeInputInventory inventory, DynamicRegistryManager manager) {
         ItemStack stack = inventory.getStack(Essence.findSlot(inventory) - 1).copy();
         applyFrequency(stack, UUID.randomUUID());
         stack.setCount(2);
@@ -41,7 +44,7 @@ public class EntangledPairRecipe extends SpecialCraftingRecipe {
     }
 
     @Override
-    public boolean matches(CraftingInventory inventory, World world) {
+    public boolean matches(RecipeInputInventory inventory, World world) {
         int essenceSlot = Essence.findSlot(inventory);
         if (essenceSlot == -1 || ((Essence) inventory.getStack(essenceSlot).getItem()).essenceType != Essence.Type.ENTANGLEMENT) {
             return false;
@@ -66,6 +69,6 @@ public class EntangledPairRecipe extends SpecialCraftingRecipe {
     }
 
     public static void register() {
-        SERIALIZER = Registry.register(Registry.RECIPE_SERIALIZER, QCraft.id("crafting_special_entangled_pair"), new SpecialRecipeSerializer<>(EntangledPairRecipe::new));
+        SERIALIZER = Registry.register(Registries.RECIPE_SERIALIZER, QCraft.id("crafting_special_entangled_pair"), new SpecialRecipeSerializer<>(EntangledPairRecipe::new));
     }
 }

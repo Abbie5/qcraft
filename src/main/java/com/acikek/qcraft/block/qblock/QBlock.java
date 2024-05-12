@@ -30,7 +30,7 @@ public class QBlock extends InertQBlock implements BlockItemProvider {
             return switch (id) {
                 case "observer_dependent_block" -> DataResult.success(Type.OBSERVER_DEPENDENT);
                 case "quantum_block" -> DataResult.success(Type.QUANTUM);
-                default -> DataResult.error("Not a valid qBlock type: " + id);
+                default -> DataResult.error(() -> "Not a valid qBlock type: " + id);
             };
         }
 

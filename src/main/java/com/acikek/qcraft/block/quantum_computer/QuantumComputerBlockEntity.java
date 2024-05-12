@@ -13,10 +13,12 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -24,7 +26,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 
 public class QuantumComputerBlockEntity extends BlockEntity implements ImplementedInventory, SidedInventory, ExtendedScreenHandlerFactory {
@@ -69,7 +70,7 @@ public class QuantumComputerBlockEntity extends BlockEntity implements Implement
 
     public static void register() {
         QUANTUM_COMPUTER_BLOCK_ENTITY = Registry.register(
-                Registry.BLOCK_ENTITY_TYPE,
+                Registries.BLOCK_ENTITY_TYPE,
                 "qcraft:quantum_computer_block_entity",
                 FabricBlockEntityTypeBuilder
                         .create(QuantumComputerBlockEntity::new, Blocks.QUANTUM_COMPUTER)
@@ -105,7 +106,7 @@ public class QuantumComputerBlockEntity extends BlockEntity implements Implement
     @Override
     public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
         if (result != null) {
-            buf.encode(QuantumComputer.Result.CODEC, result);
+            buf.encodeAsJson(QuantumComputer.Result.CODEC, result);
         }
     }
 

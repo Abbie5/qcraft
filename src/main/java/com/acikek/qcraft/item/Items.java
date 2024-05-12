@@ -2,9 +2,10 @@ package com.acikek.qcraft.item;
 
 import com.acikek.qcraft.QCraft;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.Item;
-import net.minecraft.util.registry.Registry;
-
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ public class Items {
 
 
     public static FabricItemSettings defaultSettings() {
-        return new FabricItemSettings().group(QCraft.ITEM_GROUP);
+        return new FabricItemSettings();
     }
 
     public static final HashMap<String, Item> ITEMS = new HashMap<>();
@@ -36,7 +37,9 @@ public class Items {
     }
 
     public static void register(String name, Item item) {
-        Registry.register(Registry.ITEM, QCraft.id(name), item);
+        Registry.register(Registries.ITEM, QCraft.id(name), item);
+        ItemGroupEvents.modifyEntriesEvent(QCraft.ITEM_GROUP_KEY).register(entries ->
+                entries.add(item));
     }
 
     public static void registerAll() {

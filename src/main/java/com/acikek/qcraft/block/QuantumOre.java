@@ -5,7 +5,6 @@ import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Material;
 import net.minecraft.block.RedstoneOreBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,8 +12,13 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.structure.rule.TagMatchRuleTest;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -22,16 +26,14 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.util.registry.BuiltinRegistries;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryEntry;
-import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.YOffset;
-import net.minecraft.world.gen.feature.*;
+import net.minecraft.world.gen.feature.ConfiguredFeature;
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.OreFeatureConfig;
+import net.minecraft.world.gen.feature.PlacedFeature;
 import net.minecraft.world.gen.placementmodifier.CountPlacementModifier;
 import net.minecraft.world.gen.placementmodifier.HeightRangePlacementModifier;
 import net.minecraft.world.gen.placementmodifier.SquarePlacementModifier;
@@ -43,7 +45,7 @@ public class QuantumOre extends RedstoneOreBlock {
     public static final BooleanProperty LIT = RedstoneOreBlock.LIT;
 
     public static final Settings QUANTUM_ORE_SETTINGS = FabricBlockSettings
-            .of(Material.STONE)
+            .of()
             .requiresTool()
             .strength(3.0f, 5.0f)
             .luminance((state) -> state.get(LIT) ? 9 : 0);
@@ -63,7 +65,7 @@ public class QuantumOre extends RedstoneOreBlock {
         QUANTUM_ORE_CONFIGURED_FEATURE = new ConfiguredFeature<>(
                 Feature.ORE,
                 new OreFeatureConfig(
-                        OreConfiguredFeatures.STONE_ORE_REPLACEABLES,
+                        new TagMatchRuleTest(BlockTags.STONE_ORE_REPLACEABLES),
                         Blocks.QUANTUM_ORE.getDefaultState(),
                         8
                 )
@@ -71,7 +73,7 @@ public class QuantumOre extends RedstoneOreBlock {
         DEEPSLATE_QUANTUM_ORE_CONFIGURED_FEATURE = new ConfiguredFeature<>(
                 Feature.ORE,
                 new OreFeatureConfig(
-                        OreConfiguredFeatures.DEEPSLATE_ORE_REPLACEABLES,
+                        new TagMatchRuleTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES),
                         Blocks.DEEPSLATE_QUANTUM_ORE.getDefaultState(),
                         8
                 )
@@ -97,7 +99,7 @@ public class QuantumOre extends RedstoneOreBlock {
     // RGB(30, 199, 106)
     public static final int CONDENSED_GREEN = 2017130;
 
-    public static final DustParticleEffect DUST_PARTICLE = new DustParticleEffect(new Vec3f(Vec3d.unpackRgb(CONDENSED_GREEN)), 1.0f);
+    public static final DustParticleEffect DUST_PARTICLE = new DustParticleEffect(Vec3d.unpackRgb(CONDENSED_GREEN).toVector3f(), 1.0f);
 
     public QuantumOre(Settings settings) {
         super(settings);
@@ -157,12 +159,10 @@ public class QuantumOre extends RedstoneOreBlock {
 
     public static void registerFeature(String name, ConfiguredFeature<?, ?> configuredFeature, PlacedFeature placedFeature) {
         Identifier id = QCraft.id(name);
-        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, id, configuredFeature);
-        Registry.register(BuiltinRegistries.PLACED_FEATURE, id, placedFeature);
         BiomeModifications.addFeature(
                 BiomeSelectors.foundInOverworld(),
                 GenerationStep.Feature.UNDERGROUND_ORES,
-                RegistryKey.of(Registry.PLACED_FEATURE_KEY, id)
+                RegistryKey.of(RegistryKeys.PLACED_FEATURE, id)
         );
     }
 

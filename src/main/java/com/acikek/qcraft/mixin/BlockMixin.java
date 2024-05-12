@@ -7,7 +7,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.loot.context.LootContext;
+import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -56,7 +56,7 @@ public abstract class BlockMixin {
             @Nullable Entity entity,
             ItemStack stack,
             CallbackInfoReturnable<List<ItemStack>> cir,
-            LootContext.Builder builder
+            LootContextParameterSet.Builder builder
     ) {
         setQBlockDrop(world, pos, cir);
     }

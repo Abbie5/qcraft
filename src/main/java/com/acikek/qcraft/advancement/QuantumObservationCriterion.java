@@ -11,6 +11,7 @@ import net.minecraft.predicate.BlockPredicate;
 import net.minecraft.predicate.entity.AdvancementEntityPredicateDeserializer;
 import net.minecraft.predicate.entity.AdvancementEntityPredicateSerializer;
 import net.minecraft.predicate.entity.EntityPredicate;
+import net.minecraft.predicate.entity.LootContextPredicate;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
@@ -21,7 +22,7 @@ public class QuantumObservationCriterion extends AbstractCriterion<QuantumObserv
     public static Identifier ID = QCraft.id("quantum_observation");
 
     @Override
-    protected Conditions conditionsFromJson(JsonObject obj, EntityPredicate.Extended playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
+    protected Conditions conditionsFromJson(JsonObject obj, LootContextPredicate playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
         BlockPredicate face = BlockPredicate.fromJson(obj.get("face"));
         EnumPredicate<QBlock.Observation> observation = EnumPredicate.fromJson(obj.get("observation"), QBlock.Observation::valueOf);
         EnumPredicate<QBlock.Type> type = EnumPredicate.fromJson(obj.get("type"), QBlock.Type::valueOf);
@@ -35,7 +36,7 @@ public class QuantumObservationCriterion extends AbstractCriterion<QuantumObserv
     }
 
     public void trigger(ServerPlayerEntity player, BlockPos pos, QBlock.Observation observationType, QBlock.Type qBlockType, boolean entangled) {
-        trigger(player, (Conditions conditions) -> conditions.matches(player.getWorld(), pos, observationType, qBlockType, entangled));
+        trigger(player, (Conditions conditions) -> conditions.matches(player.getServerWorld(), pos, observationType, qBlockType, entangled));
     }
 
     public static class Conditions extends AbstractCriterionConditions {
@@ -45,7 +46,7 @@ public class QuantumObservationCriterion extends AbstractCriterion<QuantumObserv
         public EnumPredicate<QBlock.Type> type;
         public boolean entangled;
 
-        public Conditions(EntityPredicate.Extended playerPredicate, BlockPredicate face, EnumPredicate<QBlock.Observation> observation, EnumPredicate<QBlock.Type> type, boolean entangled) {
+        public Conditions(LootContextPredicate playerPredicate, BlockPredicate face, EnumPredicate<QBlock.Observation> observation, EnumPredicate<QBlock.Type> type, boolean entangled) {
             super(ID, playerPredicate);
             this.face = face;
             this.observation = observation;
